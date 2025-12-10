@@ -69,23 +69,21 @@ jobs:
         cache-to: type=gha,mode=max
 
 
-    # ---- LOGIN SECOND REGISTRY (FAUX REGISTRE POUR LE TP) ----
-    - name: Login to second registry
+        # ---- LOGIN TO GITHUB CONTAINER REGISTRY ----
+    - name: Login to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        registry: registry.example.com
-        username: ${{ secrets.REGISTRY2_USERNAME }}
-        password: ${{ secrets.REGISTRY2_PASSWORD }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-
-    # ---- PUSH IMAGE TO SECOND REGISTRY ----
-    - name: Push image to second registry
+    # ---- PUSH IMAGE TO GITHUB CONTAINER REGISTRY ----
+    - name: Push image to GitHub Container Registry
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: registry.example.com/example/flask-app:latest
-
+        tags: ghcr.io/${{ github.repository_owner }}/flask-app:latest
 
   # --------------------------
   # 3) JOB : EMAIL SI ÉCHEC
